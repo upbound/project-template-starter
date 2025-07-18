@@ -1,5 +1,5 @@
-name: project-example-template
-description: "A template for creating a new example project"
+name: project-template-starter
+description: "A template for creating a new project"
 version: 0.1.0
 
 languages:
