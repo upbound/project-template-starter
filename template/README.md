@@ -1,7 +1,7 @@
 # {{.ProjectName}}
 
-This project was initialized using the `{{.ExampleName}}` example (version
-{{.ExampleVersion}}). Update this README with information about what the
+This project was initialized using the `{{.TemplateName}}` template (version
+{{.TemplateVersion}}). Update this README with information about what the
 project contains and an example of how to use it.
 
 ## Installation
