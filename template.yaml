@@ -4,7 +4,7 @@ version: 0.1.0
 
 languages:
 - go
-- go-templates
+- go-templating
 - kcl
 - python
 
@@ -15,9 +15,9 @@ rename:
     - pattern: "*-go"
       replacement: "*"
       languages: ["go"]
-    - pattern: "*-go-templates"
+    - pattern: "*-go-templating"
       replacement: "*"
-      languages: ["go-templates"]
+      languages: ["go-templating"]
     - pattern: "*-python"
       replacement: "*"
       languages: ["python"]
