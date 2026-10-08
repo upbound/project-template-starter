@@ -13,7 +13,7 @@ To get started:
    initialized.
 1. Update the `template/README.md` to be about the initialized project - the
    resources it contains and the commands it supports.
-1. Add any resources to `templates/[apis|examples|functions|tests]`, using the
+1. Add any resources to `template/[apis|examples|functions|tests]`, using the
    guide below, which will be initialized alongside the template.
 1. Update this `README.md` to be about your example!
 
@@ -90,9 +90,10 @@ rename:
 ```
 
 Then, when a user initializes their project with one of the supported languages,
-like `up project init -e <your example> --language python <project-name>`, the
-directories will be renamed using the pattern defined in the `replacement`. For
-the example above, the initialized project will have the following structure:
+like `up project init <project-name> --template <your-template> --language
+python`, the directories will be renamed using the pattern defined in the
+`replacement`. For the example above, the initialized project will have the
+following structure:
 
 ```shell
 <project-name>
@@ -130,16 +131,18 @@ The variables made available to the templates are:
 
 - `Language` - the language specified by the user.
 - `ProjectName` - the name of the initialized project.
-- `ExampleName` - the name of the example used to initialize the project.
-- `ExampleVersion` - the version of the example (as specified in `template.yaml`)
-- `Values` - an arbitrary map of values configured as provided by the example or
-  the user (like Helm values).
+- `TemplateName` - the name of the template used to initialize the project.
+- `TemplateVersion` - the version of the template (as specified in
+  `template.yaml`).
+- `Values` - an arbitrary map of values configured as provided by the template
+  or the user (like Helm values).
 
 ### Values
 
 Users can pass values as key-value pairs to be used with templated files, using the
-`--values` argument with `up project init`. You can specify default values for
-these keys in the `template.yaml` file like so:
+`--values` argument with `up project init` (e.g. `--values
+'Author=jane;Team=platform'`). You can specify default values for these keys in
+the `template.yaml` file like so:
 
 ```yaml
 values:
@@ -148,4 +151,4 @@ values:
 ```
 
 Then in your template files you can access these values using
-`{{.Values.author}}`.
+`{{.Values.Author}}`.
