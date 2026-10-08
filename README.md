@@ -17,6 +17,23 @@ To get started:
    guide below, which will be initialized alongside the template.
 1. Update this `README.md` to be about your example!
 
+## Template conventions
+
+Templates target `up` v0.50+ and Crossplane v2:
+
+- `template/upbound.yaml` uses `apiVersion: meta.dev.upbound.io/v2alpha1`.
+- APIs are namespaced Crossplane v2 XRDs (`apiVersion:
+  apiextensions.crossplane.io/v2`, `scope: Namespaced`) without `claimNames`.
+  Name the kind after what it is (`StorageBucket`, not `XStorageBucket`), and
+  set `metadata.namespace` (e.g. `default`) in the examples.
+- Templates that use an Upbound provider compose its namespaced managed
+  resources (`*.m.upbound.io`) and ship an `examples/providerconfig.yaml` with a
+  `ClusterProviderConfig` named `default`.
+- Python functions and tests are packages built with `pyproject.toml`. Start
+  from what `up function generate` and `up test generate` produce, keep the
+  `crossplane-models` dependency they add, and import the generated models as
+  `from models...`. Don't add a `model` symlink or a `requirements.txt`.
+
 ## Templated directories
 
 When initializing a project, the `up project init` command requires the user to
@@ -25,7 +42,8 @@ are created for the user - allowing you to create examples that work for
 multiple languages.
 
 Use the `rename.directories` option in the `template.yaml` file to determine
-which files should be used for a given language.
+which files should be used for a given language. Directories that don't match
+any pattern, like `apis` and `examples` below, are created for every language.
 
 ### Example
 
@@ -35,39 +53,45 @@ this:
 ```shell
 template
 ├── apis
-│   ├── xstoragebucket-kcl
-│   │   ├── composition.yaml
-│   │   └── definition.yaml
-│   └── xstoragebucket-python
-│       ├── composition.yaml
-│       └── definition.yaml
+│   └── storagebuckets
+│       ├── composition.yaml
+│       └── definition.yaml
 ├── examples
-│   ├── xstoragebuckets-kcl
-│   │   └── example.yaml
-│   └── xstoragebuckets-python
-│       └── example.yaml
+│   ├── providerconfig.yaml
+│   └── storagebuckets
+│       └── example.yaml
 ├── functions
-│   ├── compose-bucket-kcl
-│   │   ├── kcl.mod
-│   │   ├── kcl.mod.lock
-│   │   ├── main.k
-│   │   └── model -> ../../.up/kcl/models
-│   └── compose-bucket-python
-│       ├── main.py
-│       ├── model -> ../../.up/python/models
-│       └── requirements.txt
+│   ├── compose-bucket-kcl
+│   │   ├── kcl.mod
+│   │   ├── kcl.mod.lock
+│   │   ├── main.k
+│   │   └── model -> ../../.up/kcl/models
+│   └── compose-bucket-python
+│       ├── function
+│       │   ├── __init__.py
+│       │   ├── __version__.py
+│       │   ├── fn.py
+│       │   └── main.py
+│       ├── pyproject.toml
+│       └── README.md
 ├── LICENSE
 ├── README.md
 ├── tests
-│   ├── test-xstoragebucket-kcl
-│   │   ├── kcl.mod
-│   │   ├── kcl.mod.lock
-│   │   ├── main.k
-│   │   └── model -> ../../.up/kcl/models
-│   └── test-xstoragebucket-python
-│       ├── main.py
-│       ├── model -> ../../.up/python/models
-│       └── requirements.txt
+│   ├── e2etest-storagebucket-kcl
+│   │   └── ...
+│   ├── e2etest-storagebucket-python
+│   │   └── ...
+│   ├── test-storagebucket-kcl
+│   │   ├── kcl.mod
+│   │   ├── kcl.mod.lock
+│   │   ├── main.k
+│   │   └── model -> ../../.up/kcl/models
+│   └── test-storagebucket-python
+│       ├── pyproject.toml
+│       ├── README.md
+│       └── test
+│           ├── __init__.py
+│           └── __main__.py
 └── upbound.yaml
 ```
 
@@ -98,26 +122,42 @@ following structure:
 ```shell
 <project-name>
 ├── apis
-│   └── xstoragebucket
-│       ├── composition.yaml
-│       └── definition.yaml
+│   └── storagebuckets
+│       ├── composition.yaml
+│       └── definition.yaml
 ├── examples
-│   └── xstoragebuckets
-│       └── example.yaml
+│   ├── providerconfig.yaml
+│   └── storagebuckets
+│       └── example.yaml
 ├── functions
-│   └── compose-bucket
-│       ├── main.py
-│       ├── model -> ../../.up/python/models
-│       └── requirements.txt
+│   └── compose-bucket
+│       ├── function
+│       │   ├── __init__.py
+│       │   ├── __version__.py
+│       │   ├── fn.py
+│       │   └── main.py
+│       ├── pyproject.toml
+│       └── README.md
 ├── LICENSE
 ├── README.md
 ├── tests
-│   └── test-xstoragebucket
-│       ├── main.py
-│       ├── model -> ../../.up/python/models
-│       └── requirements.txt
+│   ├── e2etest-storagebucket
+│   │   └── ...
+│   └── test-storagebucket
+│       ├── pyproject.toml
+│       ├── README.md
+│       └── test
+│           ├── __init__.py
+│           └── __main__.py
 └── upbound.yaml
 ```
+
+### Tests
+
+Name test directories consistently: `test-<resource>` for composition tests and
+`e2etest-<resource>` for end-to-end tests, each with the language suffix. Keep
+e2e `timeoutSeconds` close to what the resources need to become ready - no more
+than 600-900 seconds - so a broken test fails quickly.
 
 ## Templated files
 
